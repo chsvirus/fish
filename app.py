@@ -3,7 +3,7 @@ import openai
 import os
 
 app = Flask(__name__)
-openai.api_key = os.getenv("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")
+client = openai.OpenAI(api_key=os.getenv("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"))  # New client style
 
 @app.route('/chat')
 def chat():
@@ -12,14 +12,14 @@ def chat():
         return jsonify({"response": "Please provide a question."})
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant specialized in fish environments."},
                 {"role": "user", "content": q}
             ]
         )
-        return jsonify({"response": response['choices'][0]['message']['content']})
+        return jsonify({"response": response.choices[0].message.content})
     except Exception as e:
         return jsonify({"error": str(e)})
 
